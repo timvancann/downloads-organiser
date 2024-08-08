@@ -94,7 +94,20 @@ fn serialize_settings(extensions: &Settings) -> Result<()> {
 }
 
 pub fn deserialize_settings(path: PathBuf) -> Result<Settings> {
-    let file = std::fs::File::open(path)?;
-    let extensions = serde_json::from_reader(file)?;
-    Ok(extensions)
+    let file = std::fs::File::open(path);
+    let file = match file {
+        Ok(file) => file,
+        Err(_) => {
+            println!("No settings file found, using default settings");
+            return Ok(default_settings());
+        }
+    };
+    let extensions = serde_json::from_reader(file);
+    match extensions {
+        Ok(extensions) => Ok(extensions),
+        Err(_) => {
+            println!("Error reading settings file, using default settings");
+            Ok(default_settings())
+        }
+    }
 }
