@@ -2,14 +2,14 @@ use crate::cli::ScanArgs;
 use crate::settings::Settings;
 use crate::{get_default_path, settings, Stats};
 use std::fs::read_dir;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
-    let input = args.input_directory.unwrap_or_else(|| get_default_path());
-    let output = args.output_directory.unwrap_or_else(|| get_default_path());
+    let input = args.input_directory.unwrap_or_else(get_default_path);
+    let output = args.output_directory.unwrap_or_else(get_default_path);
     let settings = args
         .settings
-        .map(|s| settings::deserialize_settings(s))
+        .map(settings::deserialize_settings)
         .unwrap_or_else(|| Ok(settings::default_settings()))?;
     let bin_others = args.bin_others;
 
@@ -67,15 +67,10 @@ fn process_file(input: PathBuf, settings: &Settings) -> FileResult {
 }
 
 fn move_file(path: &PathBuf, stats: &mut Stats, folder: PathBuf) -> crate::prelude::Result<()> {
-    let _ = create_folder_if_not_exists(&folder)?;
-    let _ = move_file_to_folder(&path, &folder)?;
+    create_folder_if_not_exists(&folder)?;
+    move_file_to_folder(path, &folder)?;
     stats.total_files += 1;
     Ok(())
-}
-
-fn is_dotfile(path: &PathBuf) -> bool {
-    let file_name = path.file_name().unwrap().to_str().unwrap();
-    file_name.starts_with(".")
 }
 
 fn create_folder_if_not_exists(folder_name: &PathBuf) -> crate::prelude::Result<()> {
@@ -85,14 +80,14 @@ fn create_folder_if_not_exists(folder_name: &PathBuf) -> crate::prelude::Result<
     Ok(())
 }
 
-fn move_file_to_folder(path: &PathBuf, folder_name: &PathBuf) -> crate::prelude::Result<()> {
+fn move_file_to_folder(path: &PathBuf, folder_name: &Path) -> crate::prelude::Result<()> {
     let file_name = path.file_name().unwrap().to_str().unwrap();
     let new_path = folder_name.join(file_name);
     std::fs::rename(path, new_path)?;
     Ok(())
 }
 
-fn is_app(path: &PathBuf) -> bool {
+fn is_app(path: &Path) -> bool {
     path.file_name()
         .unwrap()
         .to_str()
