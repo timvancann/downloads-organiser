@@ -1,0 +1,10 @@
+[package]
+name = "downloads-organiser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.13", features = ["derive", "string"] }
+directories = "5.0.1"
+serde = { version = "1.0.205", features = ["derive"] }
+serde_json = "1.0.122"
