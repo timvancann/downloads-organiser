@@ -13,9 +13,6 @@ pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
         .unwrap_or_else(|| Ok(settings::default_settings()))?;
     let bin_others = args.bin_others;
 
-    println!("Input directory: {:?}", input);
-    println!("Output directory: {:?}", output);
-
     let mut stats = Stats { total_files: 0 };
 
     for entry in read_dir(&input)? {

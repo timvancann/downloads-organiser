@@ -1,8 +1,9 @@
 # Downloads Organiser
 
-This is a simple cli written in Rust to organise your downloads folder. It moves files from the downloads folder to the specified folder based on the file type.
+This is a simple cli written in Rust to organise your downloads folder. It moves files from the downloads folder to the
+specified folder based on the file type.
 
-## Installation 
+## Installation
 
 on *nix with [just](https://github.com/casey/just) which puts the binary in the `~/.local/bin` folder
 
@@ -41,9 +42,15 @@ You can generate the default settings file by running the following command
 downloads-organiser settings
 ```
 
-This will generate a `settings.json` file in the current directory. You can then modify this file to your liking and pass it to the cli using the `-s` flag.
+This will generate a `settings.json` file in the current directory. You can then modify this file to your liking and
+pass it to the cli using the `-s` flag.
 
 # Example
 
 ```bash
 downloads-organiser scan -s settings.json
+```
+
+# Alfred Workflow
+
+For Mac users, you can use the provided [Alfred workflow](https://www.alfredapp.com/workflows/)
