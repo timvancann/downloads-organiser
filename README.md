@@ -45,8 +45,6 @@ downloads-organiser settings
 This will generate a `settings.json` file in the current directory. You can then modify this file to your liking and
 pass it to the cli using the `-s` flag.
 
-# Example
-
 ```bash
 downloads-organiser scan -s settings.json
 ```
