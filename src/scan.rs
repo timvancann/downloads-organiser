@@ -10,7 +10,7 @@ pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
     let settings = args
         .settings
         .map(settings::deserialize_settings)
-        .unwrap_or_else(|| Ok(settings::default_settings()))?;
+        .unwrap_or_else(settings::default_settings);
     let bin_others = args.bin_others;
 
     let mut stats = Stats { total_files: 0 };
@@ -19,6 +19,7 @@ pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
         let entry = entry?;
         let path = entry.path();
         create_folder_if_not_exists(&output)?;
+
         let result = process_file(path, &settings);
         match result {
             FileResult::File(path, folder) => {

@@ -2,12 +2,6 @@ use crate::prelude::Result;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-pub fn settings_cli() -> Result<()> {
-    let settings = default_settings();
-    serialize_settings(&settings)?;
-    Ok(())
-}
-
 #[derive(Deserialize, Serialize)]
 pub struct Settings {
     pub extensions: Vec<Extension>,
@@ -20,6 +14,13 @@ pub struct Extension {
     pub extensions: Vec<String>,
     pub path: String,
 }
+
+pub fn settings_cli() -> Result<()> {
+    let settings = default_settings();
+    serialize_settings(&settings)?;
+    Ok(())
+}
+
 pub fn default_settings() -> Settings {
     Settings {
         extensions: vec![
@@ -93,21 +94,18 @@ fn serialize_settings(extensions: &Settings) -> Result<()> {
     Ok(())
 }
 
-pub fn deserialize_settings(path: PathBuf) -> Result<Settings> {
+pub fn deserialize_settings(path: PathBuf) -> Settings {
     let file = std::fs::File::open(path);
     let file = match file {
         Ok(file) => file,
         Err(_) => {
             println!("No settings file found, using default settings");
-            return Ok(default_settings());
+            return default_settings();
         }
     };
     let extensions = serde_json::from_reader(file);
-    match extensions {
-        Ok(extensions) => Ok(extensions),
-        Err(_) => {
-            println!("Error reading settings file, using default settings");
-            Ok(default_settings())
-        }
-    }
+    extensions.unwrap_or_else(|_| {
+        println!("Error reading settings file, using default settings");
+        default_settings()
+    })
 }
