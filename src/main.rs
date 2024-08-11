@@ -3,7 +3,7 @@ mod scan;
 mod settings;
 
 use crate::cli::{Commands, CLI};
-use crate::scan::scan_cli;
+use crate::scan::{scan_cli, scan_others};
 use crate::settings::settings_cli;
 use anyhow::Result;
 use clap::Parser;
@@ -27,6 +27,7 @@ fn main() -> Result<()> {
 
     match args.command {
         Commands::Scan(args) => scan_cli(args),
+        Commands::RescanOthers(args) => scan_others(args),
         Commands::Settings => settings_cli(),
     }
 }

@@ -1,3 +1,4 @@
+use crate::scan::ScanError;
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -14,6 +15,9 @@ pub enum Commands {
     Scan(ScanArgs),
     /// Generate a default settings file
     Settings,
+    /// Rescan the others directory and move files based on their extension.
+    /// This is useful if you have added new extensions to the settings file
+    RescanOthers(ScanArgs),
 }
 
 #[derive(Args, Debug)]

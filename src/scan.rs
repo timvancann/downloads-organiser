@@ -50,6 +50,24 @@ pub fn scan_cli(args: ScanArgs) -> Result<()> {
     Ok(())
 }
 
+pub fn scan_others(args: ScanArgs) -> Result<()> {
+    let settings = args
+        .settings
+        .map(settings::deserialize_settings)
+        .unwrap_or_else(settings::default_settings);
+
+    scan_cli(ScanArgs {
+        input_directory: Some(
+            args.input_directory
+                .unwrap_or_else(get_default_path)
+                .join(&settings.other_dir),
+        ),
+        output_directory: args.output_directory,
+        settings: None,
+        bin_others: false,
+    })
+}
+
 enum FileResult {
     File(PathBuf, String),
     Other(PathBuf, String),
