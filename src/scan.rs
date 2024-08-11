@@ -1,7 +1,7 @@
 use crate::cli::ScanArgs;
 use crate::settings::Settings;
 use crate::{get_default_path, settings, Stats};
-use std::fs::read_dir;
+use std::fs::{create_dir_all, read_dir};
 use std::path::{Path, PathBuf};
 
 pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
@@ -18,7 +18,7 @@ pub fn scan_cli(args: ScanArgs) -> crate::prelude::Result<()> {
     for entry in read_dir(&input)? {
         let entry = entry?;
         let path = entry.path();
-        create_folder_if_not_exists(&output)?;
+        create_dir_all(&path)?;
 
         let result = process_file(path, &settings);
         match result {
@@ -65,16 +65,8 @@ fn process_file(input: PathBuf, settings: &Settings) -> FileResult {
 }
 
 fn move_file(path: &PathBuf, stats: &mut Stats, folder: PathBuf) -> crate::prelude::Result<()> {
-    create_folder_if_not_exists(&folder)?;
     move_file_to_folder(path, &folder)?;
     stats.total_files += 1;
-    Ok(())
-}
-
-fn create_folder_if_not_exists(folder_name: &PathBuf) -> crate::prelude::Result<()> {
-    if !folder_name.exists() {
-        std::fs::create_dir(folder_name)?;
-    }
     Ok(())
 }
 
