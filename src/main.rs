@@ -1,14 +1,13 @@
 mod cli;
-mod prelude;
 mod scan;
 mod settings;
 
 use crate::cli::{Commands, CLI};
 use crate::scan::scan_cli;
 use crate::settings::settings_cli;
+use anyhow::Result;
 use clap::Parser;
 use directories::UserDirs;
-use prelude::Result;
 use std::path::PathBuf;
 
 fn get_default_path() -> PathBuf {
